@@ -20,20 +20,15 @@ class Server extends WebScoket.Server {
 
   async message(data) {
     let message = data.toString("utf-8");
-    console.log(message);
-    fs.readFile("./test.html", async (err, data) => {
-      if (err) return console.log(err);
-      const metadata = data;
-      const file = { content: metadata };
-      let pdf = await htmlToPdf.generatePdf(file, printOptions);
-      await fs.writeFileSync("./test.pdf", pdf, "binary");
-      await console.log("Incepe printarea");
-
-      await ptp.print("test.pdf").then(console.log).catch(console.error);
-      await fs.unlink("./test.pdf", (err) => {
-          if (err) return console.log(err);
-      });
-    });
+    console.log("New print in coming");
+    const template = message;
+    const file = { content: template };
+    const pdf = await htmlToPdf.generatePdf(file, printOptions);
+    await fs.writeFileSync("./temp.pdf", pdf, "binary");
+    await ptp.print("./temp.pdf").then(console.log).cache(console.error);
+    await fs.unlink("./temp.pdf", err => {
+      if (err) return console.error(err);
+    })
   }
 }
 
