@@ -3,13 +3,12 @@ const { PORT, printOptions } = require("./config");
 const htmlToPdf = require("html-pdf-node");
 const ptp = require("spdf-to-printer");
 const path = require("path");
-
 const fs = require("fs");
 
 class Server extends WebScoket.Server {
-  constructor() {
-    super({ port: PORT });
-
+  constructor(server) {
+    super({server: server});
+    console.log("CLIENT CONECTAT LA SERVER MODULE")
     this.on("connection", this.onConnection);
   }
 

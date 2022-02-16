@@ -1,5 +1,6 @@
+
 module.exports = {
-    PORT: 3000,
+    PORT: 8000,
     printOptions: {
         format: "A4"
     }
