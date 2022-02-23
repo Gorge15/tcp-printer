@@ -1,17 +1,32 @@
-const Server = require("./Server");
-const https = require("https");
+const WebScoketClient = require("websocket").client;
+const { printOptions } = require("./config");
 const fs = require("fs");
-const { PORT } = require("./config.js");
+const htmlToPdf = require("html-pdf-node");
+const ptp = require("spdf-to-printer");
+const path = require("path");
+let key = "c18824492815052fa2425d036a05e021";
+let url = `wss://socketsbay.com/wss/v2/100/${key}/`;
 
+let client = new WebScoketClient();
 
-const sv = https.createServer({
-    cert: fs.readFileSync("./sslcert/cert.pem"),
-    key: fs.readFileSync("./sslcert/key.pem"),
+client.on("connect", (connection) => {
+  console.log("WEBSOCKET LEGAT");
+  connection.on("message", (msg) => {
+      console.log("Cineva s-a conectat la imprimanta")
+    let message = msg.utf8Data;
+
+    fs.readFile("./test.html", async (err, data) => {
+      if (err) return console.log(err);
+      const metadata = data;
+      const file = { content: metadata };
+      let pdf = await htmlToPdf.generatePdf(file, printOptions);
+      await fs.writeFileSync("./test.pdf", pdf, "binary");
+      await console.log("Incepe printarea");
+      await fs.unlink("./test.pdf", (err) => {
+        if (err) return console.log(err);
+      });
+    });
+  });
 });
 
-
-sv.listen(PORT, () => {
-    console.log(`SERVER LISTEN TO PORT ${PORT}`);
-});
-
-const server = new Server(sv);
+client.connect(url, "echo-protocol");
