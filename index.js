@@ -4,7 +4,7 @@ const fs = require("fs");
 const htmlToPdf = require("html-pdf-node");
 const ptp = require("spdf-to-printer");
 const path = require("path");
-let key = "c18824492815052fa2425d036a05e021";
+let key = "";
 let url = `wss://socketsbay.com/wss/v2/100/${key}/`;
 
 let client = new WebScoketClient();
